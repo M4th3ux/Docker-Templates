@@ -24,15 +24,19 @@ services:
     environment:
       - PUID=1000
       - PGID=1000
-      - TZ=America_Sao_Paulo
-      - JELLYFIN_PublishedServerUrl=http://IP #optional
+      - TZ=America/Sao_Paulo
+      # Opcional: descomente e troque pelo IP real do servidor
+      # - JELLYFIN_PublishedServerUrl=http://192.168.0.10
     volumes:
       - jelly_data:/config
       - ${DownloadsPath}:/data/movies
+      # tmpfs para transcode com limite de 2 GB (sintaxe longa do compose)
+      - type: tmpfs
+        target: /transcode
+        tmpfs:
+          size: 2G
     devices:
         - /dev/dri:/dev/dri # Libera IGPU para o container
-    tmpfs:
-        - /trasncode:size=2G
     ports:
       - 8096:8096
       #- 8920:8920 #optional
